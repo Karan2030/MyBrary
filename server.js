@@ -7,6 +7,7 @@ const express=require("express");
 const expressLayouts=require("express-ejs-layouts")
 const app=express();
 const mongoose=require("mongoose");
+const bodyParser=require("body-parser");
 
 
 //connect to mongoose database
@@ -15,7 +16,8 @@ const db=mongoose.connection;
 db.on("error",error=> console.error(error));
 db.once("open",()=> console.log("connected to mongodb"));
 
-
+//body parser
+app.use(bodyParser.urlencoded({limit:'10mb',extended:false}))
 
 //set view engine
 app.set("view engine","ejs");
@@ -30,6 +32,10 @@ app.use(express.static("public"))
 //router for index
 const indexRouter=require("./routes/index")
 app.use("/",indexRouter);
+
+//routes for Author
+const authorRouter=require("./routes/authors")
+app.use("/authors",authorRouter);
 
 app.listen(process.env.PORT || 3000,(req,res)=>{
     console.log("app listening on port 3000");
